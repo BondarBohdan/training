@@ -135,16 +135,16 @@ public class StockExchange {
                         StockExchange.access().searchByTrend(Security.Trend.CONSOLIDATION);
                         break;
                     default:
-                        System.out.println("Entered wrong value. System shut douwn.");
+                        System.out.println("Entered wrong value. System shut down.");
                         System.exit(1);
                         break;
                 }
             } else {
-                System.out.println("Entered wrong value. System shut douwn.");
+                System.out.println("Entered wrong value. System shut down.");
                 System.exit(1);
             }
-        } catch (IOException e) {
-            System.out.println("An error occured, restart the application.");
+        } catch (Exception e) {
+            System.out.println("An error occurred, restart the application.");
         }
     }
 
