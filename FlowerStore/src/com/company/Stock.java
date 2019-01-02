@@ -76,24 +76,24 @@ public class Stock {
     }
 
     public void changeAvailableQuantity() {
-        int indexInOrderList;
+        int orderSize;
 
         for (Product product : Order.access().getOrderList()) {
-            indexInOrderList = Order.access().getOrderQuantity().get(Order.access().getOrderList().indexOf(product));
+            orderSize = Order.access().getOrderQuantity().get(Order.access().getOrderList().indexOf(product));
 
             if (flowersAvailable.contains(product)) {
-                calculateNewQuantity(flowersAvailable, product, indexInOrderList);
+                calculateNewQuantity(flowersAvailable, product, orderSize);
             } else if (palmsTreesAvailable.contains(product)) {
-                calculateNewQuantity(palmsTreesAvailable, product, indexInOrderList);
+                calculateNewQuantity(palmsTreesAvailable, product, orderSize);
             } else if (bouquetsAvailable.contains(product)) {
-                calculateNewQuantity(bouquetsAvailable, product, indexInOrderList);
+                calculateNewQuantity(bouquetsAvailable, product, orderSize);
             }
         }
 
     }
 
-    public void calculateNewQuantity(List<Product> list, Product product, int indexInOrderList) {
-        int newQuantity = list.get(list.indexOf(product)).getQuantity() - indexInOrderList;
+    public void calculateNewQuantity(List<Product> list, Product product, int orderSize) {
+        int newQuantity = list.get(list.indexOf(product)).getQuantity() - orderSize;
 
         if (newQuantity <= 0) {
             list.remove(product);

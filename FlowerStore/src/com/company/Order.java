@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    private List<Product> orderList = new ArrayList<Product>();
-    private List<Integer> orderQuantity = new ArrayList<Integer>();
+    private List<Product> orderList = new ArrayList<>();
+    private List<Integer> orderQuantity = new ArrayList<>();
     private boolean flowersAsBouquet = false;
-    private int delivery = 0;
+    private int deliveryPrice = 0;
     private String deliveryAddress = "";
 
     private static Order ourInstance = new Order();
@@ -38,7 +38,7 @@ public class Order {
     }
 
     public void setDelivery(int delivery) {
-        this.delivery = delivery;
+        this.deliveryPrice = delivery;
     }
 
     public void viewOrderInfo() {
@@ -54,13 +54,13 @@ public class Order {
             }
             System.out.println(bouquetInfo);
             System.out.println("Delivery to " + deliveryAddress);
-            System.out.println("Total price is " + (Discount.calculatePriceWithBouquet(orderList) + delivery) + "\n");
+            System.out.println("Total price is " + (Discount.calculatePriceWithBouquet(orderList) + deliveryPrice) + "\n");
         } else {
             for (Product product : orderList) {
                 System.out.println(product.getName() + " - " + orderQuantity.get(orderList.indexOf(product)) + " pcs");
             }
             System.out.println("Delivery to " + deliveryAddress);
-            System.out.println("Total price is " + (Discount.calculateNewPrice(orderList) + delivery) + "\n");
+            System.out.println("Total price is " + (Discount.calculateNewPrice(orderList) + deliveryPrice) + "\n");
         }
     }
 
@@ -73,6 +73,6 @@ public class Order {
         orderList.clear();
         orderQuantity.clear();
         deliveryAddress = "";
-        delivery = 0;
+        deliveryPrice = 0;
     }
 }
