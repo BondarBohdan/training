@@ -1,8 +1,4 @@
-package flowers;
-
-import com.company.Colors;
-import com.company.Countries;
-import com.company.Product;
+package products;
 
 public abstract class Flower extends Product {
     private int height;

@@ -1,6 +1,7 @@
 package com.company;
 
-import flowers.Flower;
+import products.Flower;
+import products.Product;
 
 import java.util.List;
 

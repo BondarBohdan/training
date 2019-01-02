@@ -1,5 +1,7 @@
 package com.company;
 
+import products.Product;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,10 +25,10 @@ public class Menu {
     private void mainMenu() {
         System.out.println("\nWelcome to Don Pedro's Flower Store.\n" +
                 "Choose what would you like to view:\n" +
-                "1 - available flowers;\n" +
+                "1 - available products;\n" +
                 "2 - available trees;\n" +
                 "3 - available bouquets;\n" +
-                "4 - to buy ordered flowers as a bouquet.\n" +
+                "4 - to buy ordered products as a bouquet.\n" +
                 "Press \"Enter\" button exit.");
 
         mainMenuChoice();

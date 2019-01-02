@@ -1,6 +1,4 @@
-package com.company;
-
-import flowers.Flower;
+package products;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +24,7 @@ public class Bouquet extends Product {
 
         return "Bouquet: " +
                 "name - " + getName() +
-                ", flowers - " + flowers +
+                ", products - " + flowers +
                 ", available - " + getQuantity() +
                 ", price - " + getPrice();
     }

@@ -1,4 +1,4 @@
-package com.company;
+package products;
 
 public enum Colors {
     RED, WHITE, GREEN, YELLOW, PINK, PURPLE;

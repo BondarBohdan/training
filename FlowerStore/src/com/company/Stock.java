@@ -1,6 +1,6 @@
 package com.company;
 
-import flowers.*;
+import products.*;
 
 import java.util.ArrayList;
 import java.util.List;

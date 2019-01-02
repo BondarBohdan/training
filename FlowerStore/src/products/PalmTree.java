@@ -1,4 +1,4 @@
-package com.company;
+package products;
 
 public class PalmTree extends Product {
     public PalmTree(String name, double price, Countries country, int quantity) {

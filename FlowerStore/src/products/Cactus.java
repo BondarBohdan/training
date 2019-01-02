@@ -1,7 +1,4 @@
-package flowers;
-
-import com.company.Colors;
-import com.company.Countries;
+package products;
 
 public class Cactus extends Flower {
 
