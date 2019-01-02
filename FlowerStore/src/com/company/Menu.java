@@ -3,6 +3,7 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class Menu {
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -32,7 +33,7 @@ public class Menu {
     }
 
     private void mainMenuChoice() {
-        String line = "start";
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
@@ -68,77 +69,21 @@ public class Menu {
     }
 
     public void flowerMenuChoice(){
-        System.out.println("Enter flower number you want to buy:\n" +
-                "\nenter 0 to go back or press \"Enter\" button to exit.");
-        String line = "start";
-        String howManyMessage = "how many pcs you want to buy?";
-        try {
-            while ((line = reader.readLine()) != null) {
-                if (line.isEmpty()) {
-                    break;
-                } else {
-                    int choice = Integer.parseInt(line);
-                    if (choice > 0 && choice <= Stock.access().getFlowersAvailable().size()) {
-                        System.out.println(howManyMessage);
-                        int amount = Integer.parseInt(reader.readLine());
-                        if (amount <= Stock.access().getFlowersAvailable().get(choice - 1).getQuantity()) {
-                            Order.access().addToOrderList(Stock.access().getFlowersAvailable().get(choice - 1), amount);
-                            returnExitOrContinue();
-                        } else {
-                            System.out.println("Sorry, " + amount + " pcs unavailable now.");
-                            run();
-                        }
-                    } else if (Integer.parseInt(line) == 0) {
-                        run();
-                    } else {
-                        flowerMenuChoice();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("An error occurred! Restart the application.");
-            System.exit(0);
-        }
+        menuChoice(Stock.access().getFlowersAvailable());
     }
 
     public void palmTreesMenuChoice(){
-        System.out.println("Enter tree number you want to buy:\n" +
-                "\nenter 0 to go back or press \"Enter\" button to exit.");
-        String line = "start";
-        String howManyMessage = "how many pcs you want to buy?";
-        try {
-            while ((line = reader.readLine()) != null) {
-                if (line.isEmpty()) {
-                    break;
-                } else {
-                    int choice = Integer.parseInt(line);
-                    if (choice > 0 && choice <= Stock.access().getPalmsTreesAvailable().size()) {
-                        System.out.println(howManyMessage);
-                        int amount = Integer.parseInt(reader.readLine());
-                        if (amount <= Stock.access().getPalmsTreesAvailable().get(choice - 1).getQuantity()) {
-                            Order.access().addToOrderList(Stock.access().getPalmsTreesAvailable().get(choice - 1), amount);
-                            returnExitOrContinue();
-                        } else {
-                            System.out.println("Sorry, " + amount + " pcs unavailable now.");
-                            run();
-                        }
-                    } else if (Integer.parseInt(line) == 0) {
-                        run();
-                    } else {
-                        palmTreesMenuChoice();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("An error occurred! Restart the application.");
-            System.exit(0);
-        }
+        menuChoice(Stock.access().getPalmsTreesAvailable());
     }
 
     public void bouquetMenuChoice(){
-        System.out.println("Enter bouquet number you want to buy:\n" +
+        menuChoice(Stock.access().getBouquetsAvailable());
+    }
+
+    public void menuChoice(List<Product> productList){
+        System.out.println("Enter item number you want to buy:\n" +
                 "\nenter 0 to go back or press \"Enter\" button to exit.");
-        String line = "start";
+        String line;
         String howManyMessage = "how many pcs you want to buy?";
         try {
             while ((line = reader.readLine()) != null) {
@@ -146,11 +91,11 @@ public class Menu {
                     break;
                 } else {
                     int choice = Integer.parseInt(line);
-                    if (choice > 0 && choice <= Stock.access().getBouquetsAvailable().size()) {
+                    if (choice > 0 && choice <= productList.size()) {
                         System.out.println(howManyMessage);
                         int amount = Integer.parseInt(reader.readLine());
-                        if (amount <= Stock.access().getBouquetsAvailable().get(choice - 1).getQuantity()) {
-                            Order.access().addToOrderList(Stock.access().getBouquetsAvailable().get(choice - 1), amount);
+                        if (amount <= productList.get(choice - 1).getQuantity()) {
+                            Order.access().addToOrderList(productList.get(choice - 1), amount);
                             returnExitOrContinue();
                         } else {
                             System.out.println("Sorry, " + amount + " pcs unavailable now.");
@@ -159,7 +104,7 @@ public class Menu {
                     } else if (Integer.parseInt(line) == 0) {
                         run();
                     } else {
-                        flowerMenuChoice();
+                        continue;
                     }
                 }
             }

@@ -31,7 +31,7 @@ public class Order {
         this.flowersAsBouquet = flowersAsBouquet;
     }
 
-    public void viewOrderInfo(){
+    public void viewOrderInfo() {
         System.out.println("Your order is ");
         String bouquetInfo = "Bouquet - ";
         if (flowersAsBouquet == true) {
@@ -52,12 +52,12 @@ public class Order {
         }
     }
 
-    public void addToOrderList(Product product, int quantity){
+    public void addToOrderList(Product product, int quantity) {
         orderList.add(product);
         orderQuantity.add(quantity);
     }
 
-    public void clearOrderList(){
+    public void clearOrderList() {
         orderList.clear();
         orderQuantity.clear();
     }
