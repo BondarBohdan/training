@@ -130,11 +130,31 @@ public class Menu {
     }
 
     public void confirmedOrderAction(){
+        deliveryInfo();
         Order.access().viewOrderInfo();
         System.out.println("Thank you for your order.");
         Stock.access().changeAvailableQuantity();
         Order.access().clearOrderList();
         run();
+    }
+
+    public void deliveryInfo() {
+        System.out.println("Do you need delivery?\n" +
+                "1 - Yes\n" +
+                "2 - No");
+        try {
+
+            String line = reader.readLine();
+                    if (Integer.parseInt(line) == 1) {
+                        System.out.println("Enter delivery address");
+                        Order.access().setDeliveryAddress(reader.readLine());
+                        Order.access().setDelivery(25);
+
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred! Restart the application.");
+            System.exit(0);
+        }
     }
 
 }
