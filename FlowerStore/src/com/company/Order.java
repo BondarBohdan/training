@@ -1,79 +1,77 @@
 package com.company;
 
-import products.Flower;
-import products.Product;
+import com.company.bouquet.*;
+import com.company.products.Product;
+import com.company.products.flowers.bouquetFlowers.BouquetFlower;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Order {
-    private List<Product> orderList = new ArrayList<>();
-    private List<Integer> orderQuantity = new ArrayList<>();
-    private boolean flowersAsBouquet = false;
-    private int deliveryPrice = 0;
-    private String deliveryAddress = "";
+    private Map<Object, Integer> orderList = new LinkedHashMap<>();
 
-    private static Order ourInstance = new Order();
+    private static Order instance = new Order();
 
     public static Order access() {
-        return ourInstance;
+        return instance;
     }
 
     private Order() {
     }
 
-    public List<Product> getOrderList() {
+    public Map<Object, Integer> getOrderList() {
         return orderList;
     }
 
-    public List<Integer> getOrderQuantity() {
-        return orderQuantity;
+
+    public void addToOrderList(Object product, int quantity) {
+        orderList.put(product, quantity);
     }
 
-    public void setFlowersAsBouquet(boolean flowersAsBouquet) {
-        this.flowersAsBouquet = flowersAsBouquet;
+    public Bouquet createBouquet(){
+        Bouquet bouquet = new Bouquet(0);
+
+        Iterator<Map.Entry<Object, Integer>> iterator = orderList.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Object, Integer> pair = iterator.next();
+
+            if (pair.getKey() instanceof BouquetFlower){
+                bouquet.getFlowers().put((BouquetFlower) pair.getKey(), pair.getValue());
+                iterator.remove();
+            }
+        }
+
+        orderList.put(bouquet, 1);
+
+        return bouquet;
     }
 
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
-
-    public void setDelivery(int delivery) {
-        this.deliveryPrice = delivery;
+    public double calculatePrice(){
+        double sum = 0.0;
+        for (Map.Entry<Object, Integer> entry : orderList.entrySet()) {
+            if (entry.getKey() instanceof IDecoration){
+                sum += ((IDecoration) entry.getKey()).getPrice();
+            } else if (entry.getKey() instanceof Product) {
+                sum += ((Product) entry.getKey()).getPrice();
+            }
+        }
+        return sum;
     }
 
     public void viewOrderInfo() {
         System.out.println("Your order is ");
-        String bouquetInfo = "Bouquet - ";
-        if (flowersAsBouquet == true) {
-            for (Product product : orderList) {
-                if (product instanceof Flower) {
-                    bouquetInfo += product.getName() + " (" + orderQuantity.get(orderList.indexOf(product)) + ") ";
-                } else {
-                    System.out.println(product.getName() + " - " + orderQuantity.get(orderList.indexOf(product)) + " pcs");
-                }
+        for (Map.Entry<Object, Integer> entry : orderList.entrySet()) {
+            if (entry.getKey() instanceof IDecoration){
+                System.out.println(((IDecoration) entry.getKey()).getDesc());
+            } else {
+                System.out.println(entry.getKey() + " " + "(" + entry.getValue() + ")");
             }
-            System.out.println(bouquetInfo);
-            System.out.println("Delivery to " + deliveryAddress);
-            System.out.println("Total price is " + (Discount.calculatePriceWithBouquet(orderList) + deliveryPrice) + "\n");
-        } else {
-            for (Product product : orderList) {
-                System.out.println(product.getName() + " - " + orderQuantity.get(orderList.indexOf(product)) + " pcs");
-            }
-            System.out.println("Delivery to " + deliveryAddress);
-            System.out.println("Total price is " + (Discount.calculateNewPrice(orderList) + deliveryPrice) + "\n");
         }
+
     }
 
-    public void addToOrderList(Product product, int quantity) {
-        orderList.add(product);
-        orderQuantity.add(quantity);
-    }
-
-    public void clearOrderList() {
+    public void clearOrderList(){
         orderList.clear();
-        orderQuantity.clear();
-        deliveryAddress = "";
-        deliveryPrice = 0;
     }
 }

@@ -1,18 +1,22 @@
 package com.company;
 
-import products.Product;
+import com.company.bouquet.*;
+import com.company.bouquet.ribbons.*;
+import com.company.bouquet.wrappers.*;
+import com.company.payment.PaymentMethodFactory;
+import com.company.products.Product;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.Map;
 
 public class Menu {
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private static Menu ourInstance = new Menu();
+    private static Menu instance = new Menu();
 
     public static Menu access() {
-        return ourInstance;
+        return instance;
     }
 
     private Menu() {
@@ -24,11 +28,16 @@ public class Menu {
 
     private void mainMenu() {
         System.out.println("\nWelcome to Don Pedro's Flower Store.\n" +
-                "Choose what would you like to view:\n" +
-                "1 - available products;\n" +
-                "2 - available trees;\n" +
-                "3 - available bouquets;\n" +
-                "4 - to buy ordered products as a bouquet.\n" +
+                "Choose what would you like to buy:\n" +
+                "1 - bouquet flowers;\n" +
+                "2 - pot flowers;\n" +
+                "3 - pots;\n" +
+                "4 - vases;\n" +
+                "5 - trees;\n" +
+                "6 - cactuses;\n" +
+                "7 - premade bouquets;\n" +
+                "8 - to buy ordered flowers as bouquet;\n" +
+                "9 - go to cart;\n" +
                 "Press \"Enter\" button exit.");
 
         mainMenuChoice();
@@ -37,68 +46,97 @@ public class Menu {
     private void mainMenuChoice() {
         String line;
         try {
-            while ((line = reader.readLine()) != null) {
-                if (line.isEmpty()) {
-                    break;
-                } else {
-                    switch (Integer.parseInt(line)) {
-                        case 1:
-                            Stock.access().viewFlowersAvailable();
-                            flowerMenuChoice();
-                            break;
-                        case 2:
-                            Stock.access().viewPalmTreesAvailable();
-                            palmTreesMenuChoice();
-                            break;
-                        case 3:
-                            Stock.access().viewBouquetsAvailable();
-                            bouquetMenuChoice();
-                            break;
-                        case 4:
-                            Order.access().setFlowersAsBouquet(true);
-                            confirmedOrderAction();
-                            break;
-                        default:
-                            System.out.println("Entered wrong value, try again.");
-                            continue;
-                    }
+            if ((line = reader.readLine()).isEmpty()) {
+                System.exit(0);
+            } else {
+                switch (Integer.parseInt(line)) {
+                    case 1:
+                        Stock.access().viewProductMap(Stock.access().getAvailableBouquetFlowers());
+                        menuChoice(Stock.access().getAvailableBouquetFlowers());
+                        break;
+                    case 2:
+                        Stock.access().viewProductMap(Stock.access().getAvailablePotFlowers());
+                        menuChoice(Stock.access().getAvailablePotFlowers());
+                        break;
+                    case 3:
+                        Stock.access().viewProductMap(Stock.access().getAvailablePots());
+                        menuChoice(Stock.access().getAvailablePots());
+                        break;
+                    case 4:
+                        Stock.access().viewProductMap(Stock.access().getAvailableVases());
+                        menuChoice(Stock.access().getAvailableVases());
+                        break;
+                    case 5:
+                        Stock.access().viewProductMap(Stock.access().getAvailablePalmTrees());
+                        menuChoice(Stock.access().getAvailablePalmTrees());
+                        break;
+                    case 6:
+                        Stock.access().viewProductMap(Stock.access().getAvailableCactuses());
+                        menuChoice(Stock.access().getAvailableCactuses());
+                        break;
+                    case 7:
+                        Stock.access().viewProductMap(Stock.access().getAvailablePremadeBouquets());
+                        menuChoice(Stock.access().getAvailablePremadeBouquets());
+                        break;
+                    case 8:
+                        Order.access().createBouquet();
+                        whetherAddBouquetDecoration();
+                        confirmedOrderAction();
+                        break;
+                    case 9:
+                        confirmedOrderAction();
+                        break;
+                    default:
+                        System.out.println("Entered wrong value, try again.");
+                        mainMenuChoice();
                 }
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("An error occurred! Restart the application.");
             System.exit(0);
         }
     }
 
-    public void flowerMenuChoice(){
-        menuChoice(Stock.access().getFlowersAvailable());
-    }
-
-    public void palmTreesMenuChoice(){
-        menuChoice(Stock.access().getPalmsTreesAvailable());
-    }
-
-    public void bouquetMenuChoice(){
-        menuChoice(Stock.access().getBouquetsAvailable());
-    }
-
-    public void menuChoice(List<Product> productList){
-        System.out.println("Enter item number you want to buy:\n" +
-                "\nenter 0 to go back or press \"Enter\" button to exit.");
+    public void whetherAddBouquetDecoration() throws IOException {
+        System.out.println("\nAdd any decorations?\n" +
+                "1 - Y\n" +
+                "2 - N");
         String line;
-        String howManyMessage = "how many pcs you want to buy?";
+        if ((line = reader.readLine()).isEmpty()) {
+            System.exit(0);
+        } else {
+            switch (Integer.parseInt(line)) {
+                case 1:
+                    Order.access().addToOrderList(decorationsMenu(), 1);
+                    break;
+                case 2:
+                    mainMenu();
+                    break;
+                default:
+                    System.out.println("Entered wrong value.");
+                    mainMenu();
+            }
+        }
+    }
+
+    public void menuChoice(Map<Product, Integer> map) {
+        System.out.println("Enter item number you want to buy:\n" +
+                "\nEnter 0 to back to main menu or press \"Enter\" button to exit.");
+        String line;
+        String howManyMessage = "How many pcs you want to buy?";
         try {
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
                     break;
                 } else {
                     int choice = Integer.parseInt(line);
-                    if (choice > 0 && choice <= productList.size()) {
+                    if (choice > 0 && choice <= map.size()) {
                         System.out.println(howManyMessage);
-                        int amount = Integer.parseInt(reader.readLine());
-                        if (amount <= productList.get(choice - 1).getQuantity()) {
-                            Order.access().addToOrderList(productList.get(choice - 1), amount);
-                            returnExitOrContinue();
+                        Integer amount = Integer.parseInt(reader.readLine());
+                        if (amount <= ((Integer) map.values().toArray()[choice - 1]).intValue()) {
+                            Order.access().addToOrderList((Product) map.keySet().toArray()[choice - 1], amount);
+                            returnOrExit();
                         } else {
                             System.out.println("Sorry, " + amount + " pcs unavailable now.");
                             run();
@@ -106,6 +144,7 @@ public class Menu {
                     } else if (Integer.parseInt(line) == 0) {
                         run();
                     } else {
+                        System.out.println("Incorrect choice. Try again.");
                         continue;
                     }
                 }
@@ -116,47 +155,102 @@ public class Menu {
         }
     }
 
-    public void returnExitOrContinue() throws IOException {
-        System.out.println("Enter 0 to go to main menu, enter 1 to order or press \"Enter\" button to exit.");
+    public void decorationsMenuInfo(){
+        System.out.println("Choose decoration to add.\n" +
+                "1 - Blue ribbon;\n" +
+                "2 - red ribbon;\n" +
+                "3 - white ribbon;\n" +
+                "4 - cellophane;\n" +
+                "5 - paper;\n" +
+                "0 - finish");
+    }
+
+    public IDecoration decorationsMenu() throws IOException {
+        decorationsMenuInfo();
+        IDecoration iDecoration = new Decoration(0);
+        String line;
+
+        while (!(line = reader.readLine()).equals("0")) {
+            switch (Integer.parseInt(line)) {
+                case 1:
+                    iDecoration = new BlueRibbon(iDecoration);
+                    break;
+                case 2:
+                    iDecoration = new RedRibbon(iDecoration);
+                    break;
+                case 3:
+                    iDecoration = new WhiteRibbon(iDecoration);
+                    break;
+                case 4:
+                    iDecoration = new Cellophane(iDecoration);
+                    break;
+                case 5:
+                    iDecoration = new Paper(iDecoration);
+                    break;
+                case 0:
+                    mainMenu();
+                    break;
+                default:
+                    System.out.println("Entered wrong value, try again.");
+                    decorationsMenu();
+            }
+        }
+
+        return iDecoration;
+    }
+
+    public void choosePaymentMethod() throws IOException {
+        System.out.println("\nChoose payment method\n" +
+                "1 - Cash\n" +
+                "2 - Card");
+        String line;
+        if ((line = reader.readLine()).isEmpty()) {
+            System.exit(0);
+        } else {
+            switch (Integer.parseInt(line)) {
+                case 1:
+                    PaymentMethodFactory.getPaymentMethod(1).pay(Order.access().calculatePrice());
+                    break;
+                case 2:
+                    PaymentMethodFactory.getPaymentMethod(2, readCardData()).pay(Order.access().calculatePrice());
+                    break;
+                default:
+                    System.out.println("Entered wrong value.");
+                    mainMenu();
+            }
+        }
+    }
+
+    public String[] readCardData() throws IOException {
+        String[] data = new String[3];
+        System.out.println("Enter card number");
+        data[0] = reader.readLine();
+        System.out.println("Enter card expiration date");
+        data[1] = reader.readLine();
+        System.out.println("Enter cvv");
+        data[2] = reader.readLine();
+
+        return data;
+    }
+
+    public void returnOrExit() throws IOException {
+        System.out.println("Enter 0 to back to main menu or press \"Enter\" button to exit.");
         String line = reader.readLine();
         int choice = Integer.parseInt(line);
         if (choice == 0) {
             run();
-        } else if (choice == 1) {
-            confirmedOrderAction();
         } else if (line.isEmpty()) {
             System.exit(0);
         } else {
-            returnExitOrContinue();
+            returnOrExit();
         }
     }
 
-    public void confirmedOrderAction(){
-        deliveryInfo();
+    public void confirmedOrderAction() throws IOException {
         Order.access().viewOrderInfo();
-        System.out.println("Thank you for your order.");
-        Stock.access().changeAvailableQuantity();
+        choosePaymentMethod();
         Order.access().clearOrderList();
         run();
-    }
-
-    public void deliveryInfo() {
-        System.out.println("Do you need delivery?\n" +
-                "1 - Yes\n" +
-                "2 - No");
-        try {
-
-            String line = reader.readLine();
-                    if (Integer.parseInt(line) == 1) {
-                        System.out.println("Enter delivery address");
-                        Order.access().setDeliveryAddress(reader.readLine());
-                        Order.access().setDelivery(25);
-
-            }
-        } catch (Exception e) {
-            System.out.println("An error occurred! Restart the application.");
-            System.exit(0);
-        }
     }
 
 }
